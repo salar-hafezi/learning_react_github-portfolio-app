@@ -1,0 +1,10 @@
+.navbar {
+    background-color: #282c34;
+    color: #fff;
+    padding: 10px;
+}
+.navbar h1 {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}

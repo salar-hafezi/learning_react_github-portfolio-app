@@ -1,0 +1,10 @@
+.profile-container {
+    width: 700px;
+    margin: 10px auto;
+    padding: 10px;
+    border: 2px solid #ddd;
+    font-size: 1.2em;
+}
+.profile-container img {
+    width: 150px;
+}

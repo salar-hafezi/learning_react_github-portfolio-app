@@ -7,25 +7,40 @@ class Profile extends Component {
         super();
         this.state = {
             data: {},
-            loading: true
+            repos: [],
+            loading: true,
+            error: ''
         }
     }
 
     async componentDidMount() {
-        const profile = await fetch('https://api.github.com/users/octocat');
-        const profileJSON = await profile.json();
+        try {
+            const profile = await fetch('https://api.github.com/users/octocat');
+            const profileJSON = await profile.json();
 
-        if (profileJSON) {
+            if (profileJSON) {
+                const repos = await fetch(profileJSON.repos_url);
+                const reposJSON = await repos.json();
+                this.setState({
+                    data: profileJSON,
+                    repos: reposJSON,
+                    loading: false
+                });
+            }
+        } catch (err) {
             this.setState({
-                data: profileJSON,
-                loading: false
+                loading: false,
+                error: err.message
             });
         }
     }
 
     render() {
-        const { data, loading } = this.state;
+        const { data, repos, loading, error } = this.state;
         if (loading) return <div>Loading ...</div>
+        if (loading || error) {
+            return <div>{loading ? 'Loading ...' : error}</div>
+        }
         const items = [
             { label: 'HTML URL', value: <a href={data.html_url} target='_blank'> Github URL</a> },
             { label: 'Repos URL', value: <a href={data.repos_url} target='_blank'> Repos URL</a> },
@@ -34,11 +49,17 @@ class Profile extends Component {
             { label: 'Location', value: data.location },
             { label: 'Email', value: data.email },
             { label: 'Bio', value: data.bio }
-        ]
+        ];
+        const projects = repos.map(repo => ({
+            label: repo.name,
+            value: <a href={repo.html_url} target='_blank'> Github URL</a>
+        }));
+
         return (
             <div className='profile-container'>
                 <img src={data.avatar_url} alt='Avatar URL' />
-                <List items={items} />
+                <List items={items} title='Profile' />
+                <List items={projects} title='Projects' />
             </div>
         );
     }

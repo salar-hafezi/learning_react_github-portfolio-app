@@ -1,15 +1,22 @@
 import React from 'react';
-import './NavLink.css';
+import styled from 'styled-components';
+
+const InnerLink = styled.a`
+    float: right;
+    text-decoration: underline;
+    color: #eee;
+    font-size: 1.2em;
+`;
 
 const NavLink = ({ url, title }) => {
     return (
-        <a
+        <InnerLink
             className='nav-link'
             href={url}
             target='_blank'
         >
             {title}
-        </a>
+        </InnerLink>
     );
 }
 
